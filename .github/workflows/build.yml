@@ -1,0 +1,43 @@
+﻿name: 🚀 .NET Vacation Manager CI
+
+on:
+  push:
+    branches: [ '**' ]   # triggers on any branch
+  pull_request:
+    branches: [ '**' ]   # triggers on any PR to any branch
+
+jobs:
+  build:
+    name: 🛠 Build & Test Vacation Manager
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup .NET environment
+      - name: ⚙️ Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x' # Update to your project's .NET version
+
+      # Step 3: Restore dependencies
+      - name: 🔄 Restore dependencies
+        run: dotnet restore VacationMS.Web/VacationMS.sln
+
+      # Step 4: Build the solution
+      - name: 🏗 Build solution
+        run: dotnet build VacationMS.Web/VacationMS.sln --configuration Release --no-restore
+
+      # Step 5: Run tests (if you add tests later)
+      - name: ✅ Run tests
+        run: dotnet test VacationMS.Web/VacationMS.sln --no-build --verbosity normal
+
+      # Step 6: Publish build artifacts (optional)
+      - name: 📦 Publish build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: VacationManager-Build
+          path: VacationMS.Web/bin/Release
