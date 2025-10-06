@@ -27,11 +27,11 @@ jobs:
 
       # Step 4: Build the project
       - name: 🏗️ Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build VacationMS.sln --configuration Release --no-restore
 
       # Step 5: Run tests (if you have a test project)
       - name: 🧪 Run tests
-        run: dotnet test --no-restore --verbosity normal
+        run: dotnet test VacationMS.sln --no-build --verbosity normal
 
       # Step 6: Publish build artifacts (optional)
       - name: 📤 Publish build artifacts
