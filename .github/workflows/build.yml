@@ -1,0 +1,39 @@
+﻿name: 🧱 Build & Test (ASP.NET Core)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Setup .NET
+      - name: ⚙️ Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'  # or 7.0.x depending on your project
+
+      # Step 3: Restore dependencies
+      - name: 🔄 Restore dependencies
+        run: dotnet restore
+
+      # Step 4: Build the project
+      - name: 🏗️ Build
+        run: dotnet build --configuration Release --no-restore
+
+      # Step 5: Run tests (if you have a test project)
+      - name: 🧪 Run tests
+        run: dotnet test --no-restore --verbosity normal
+
+      # Step 6: Publish build artifacts (optional)
+      - name: 📤 Publish build artifacts
+        if: success()
+        run: dotnet publish -c Release -o ./publish
