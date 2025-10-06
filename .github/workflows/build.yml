@@ -1,39 +1,44 @@
-﻿name: 🧱 Build & Test (ASP.NET Core)
+﻿name: 🚀 .NET Vacation Manager CI
 
+# Trigger the workflow on push or pull request to main branch
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ main ]
 
 jobs:
   build:
+    name: 🛠 Build & Test Vacation Manager
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository
-      - name: 📦 Checkout repository
-        uses: actions/checkout@v4
+      # Step 1: Checkout the repository
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
 
-      # Step 2: Setup .NET
-      - name: ⚙️ Setup .NET
-        uses: actions/setup-dotnet@v4
+      # Step 2: Setup .NET environment
+      - name: ⚙️ Setup .NET SDK
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'  # or 7.0.x depending on your project
+          dotnet-version: '7.0.x' # Update to your project's .NET version
 
       # Step 3: Restore dependencies
       - name: 🔄 Restore dependencies
-        run: dotnet restore
+        run: dotnet restore VacationMS.Web/VacationMS.sln
 
-      # Step 4: Build the project
-      - name: 🏗️ Build
-        run: dotnet build VacationMS.sln --configuration Release --no-restore
+      # Step 4: Build the solution
+      - name: 🏗 Build solution
+        run: dotnet build VacationMS.Web/VacationMS.sln --configuration Release --no-restore
 
-      # Step 5: Run tests (if you have a test project)
-      - name: 🧪 Run tests
-        run: dotnet test VacationMS.sln --no-build --verbosity normal
+      # Step 5: Run tests (if you add tests later)
+      - name: ✅ Run tests
+        run: dotnet test VacationMS.Web/VacationMS.sln --no-build --verbosity normal
 
       # Step 6: Publish build artifacts (optional)
-      - name: 📤 Publish build artifacts
+      - name: 📦 Publish build artifacts
         if: success()
-        run: dotnet publish -c Release -o ./publish
+        uses: actions/upload-artifact@v3
+        with:
+          name: VacationManager-Build
+          path: VacationMS.Web/bin/Release
